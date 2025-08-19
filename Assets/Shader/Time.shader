@@ -1,21 +1,17 @@
-Shader "Unlit/Frac"
+Shader "Unlit/Time"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _Size ("Size", Range(0.0, 0.5)) = 0.3
     }
     SubShader
     {
-        Tags { "RenderType"="Opaque" }
-        LOD 100
-
         Pass
         {
             HLSLPROGRAM
             #pragma vertex vert
             #pragma fragment frag
-
+            
             #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 
             struct appdata
@@ -33,8 +29,6 @@ Shader "Unlit/Frac"
             sampler2D _MainTex;
             float4 _MainTex_ST;
 
-            float _Size;
-
             v2f vert (appdata v)
             {
                 v2f o;
@@ -45,12 +39,9 @@ Shader "Unlit/Frac"
 
             half4 frag (v2f i) : SV_Target
             {
-                i.uv *= 3; 
-                float2 fuv = frac(i.uv);
-                float circle = length(fuv - 0.5f);
-                float wCircle = step(1 - floor(_Size/circle), _Size);
-                return half4(wCircle.xxx, 1);
-                half4 col = tex2D(_MainTex, fuv);
+                i.uv.x += _SinTime.w;
+                i.uv.y += _CosTime.w;
+                half4 col = tex2D(_MainTex, i.uv);
                 return col;
             }
             ENDHLSL

@@ -7,8 +7,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Unlit_Frac
-  m_Shader: {fileID: 4800000, guid: b0a94719960575e4b8c7c1c27596faf8, type: 3}
+  m_Name: Unlit_Lerp
+  m_Shader: {fileID: 4800000, guid: 9359456b1a15e3d419ca248452c83126, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -23,13 +23,17 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
-    - _MainTex:
-        m_Texture: {fileID: 10904, guid: 0000000000000000f000000000000000, type: 0}
+    - _Skin01:
+        m_Texture: {fileID: 10309, guid: 0000000000000000f000000000000000, type: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _Skin02:
+        m_Texture: {fileID: 10300, guid: 0000000000000000f000000000000000, type: 0}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
-    - _Size: 0.337
+    - _Lerp: 0
     m_Colors: []
   m_BuildTextureStacks: []
   m_AllowLocking: 1

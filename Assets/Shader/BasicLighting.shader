@@ -1,9 +1,8 @@
-Shader "Unlit/Frac"
+Shader "Unlit/BasicLighting"
 {
     Properties
     {
         _MainTex ("Texture", 2D) = "white" {}
-        _Size ("Size", Range(0.0, 0.5)) = 0.3
     }
     SubShader
     {
@@ -22,35 +21,47 @@ Shader "Unlit/Frac"
             {
                 float4 vertex : POSITION;
                 float2 uv : TEXCOORD0;
+                float3 normal : NORMAL;
             };
 
             struct v2f
             {
                 float2 uv : TEXCOORD0;
                 float4 vertex : SV_POSITION;
+                float3 normal : TEXCOORD1;
             };
 
             sampler2D _MainTex;
             float4 _MainTex_ST;
 
-            float _Size;
+            void unity_light(in float3 normals, out float3 Out)
+            {
+                
+            }
+
+            half3 normalWorld(half3 normal)
+            {
+                return normalize(mul(unity_ObjectToWorld, float4(normal, 0))).xyz;
+            }
 
             v2f vert (appdata v)
             {
                 v2f o;
                 o.vertex = TransformObjectToHClip(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
+                o.normal = v.normal;
                 return o;
             }
 
             half4 frag (v2f i) : SV_Target
             {
-                i.uv *= 3; 
-                float2 fuv = frac(i.uv);
-                float circle = length(fuv - 0.5f);
-                float wCircle = step(1 - floor(_Size/circle), _Size);
-                return half4(wCircle.xxx, 1);
-                half4 col = tex2D(_MainTex, fuv);
+                half3 normals = normalWorld(i.normal);
+                half3 light = 0;
+
+                unity_light(normals, light);
+                return float4(light.xyz, 1);
+                
+                half4 col = tex2D(_MainTex, i.uv);
                 return col;
             }
             ENDHLSL
