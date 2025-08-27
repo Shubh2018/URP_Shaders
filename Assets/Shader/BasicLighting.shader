@@ -49,13 +49,25 @@ Shader "Unlit/BasicLighting"
                 v2f o;
                 o.vertex = TransformObjectToHClip(v.vertex);
                 o.uv = TRANSFORM_TEX(v.uv, _MainTex);
-                o.normal = v.normal;
+                o.normal = normalWorld(v.normal);
                 return o;
+            }
+
+            float3 DXTCompression(float4 normalMap)
+            {
+                #if defined (UNITY_NO_DXT5nm)
+                    return normalMap.rgb *2 - 1;
+                #else
+                    float3 normalCol = float3(normalMap.a * 2 - 1, normalMap.g * 2 - 1, 0);
+                    normalCol.b = sqrt(1 - (pow(normalCol.r, 2)) + pow(normalCol.g, 2));
+
+                    return normalCol;
+                #endif
             }
 
             half4 frag (v2f i) : SV_Target
             {
-                half3 normals = normalWorld(i.normal);
+                half3 normals = i.normal;
                 half3 light = 0;
 
                 unity_light(normals, light);
